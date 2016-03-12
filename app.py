@@ -4,6 +4,7 @@ import re
 import requests
 import logging
 import functools
+from collections import OrderedDict
 log = logging.getLogger('freepto-web')
 
 from discovery import lang_dirs
@@ -66,11 +67,14 @@ def get_images_data():
         raise Exception('Can\'t download http://download.freepto.mx/latest/')
 
     latest_text = latest.text.replace('\n', '')
-    locales = re.findall('(freepto-[\-0-9\.]*_[a-zA-Z]*)', latest_text)
+    locales = [l.strip('/') for l in
+               re.findall('(freepto-v[^/]*/)', latest_text)]
+    locales.sort()
 
-    images_data = {}
+    images_data = OrderedDict()
     for locale in locales:
-        sha512_url = '%s/%s/%s.sha512sum.txt' % (base_url, locale, locale)
+        sha512_url = '{base}/{locale}/{locale}.img.sha512sum.txt'.format(
+            base=base_url, locale=locale)
         sha512 = requests.get(sha512_url)
         if sha512.status_code != 200:
             raise Exception('Can\'t download %s' % sha512_url)

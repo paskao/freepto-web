@@ -1,0 +1,40 @@
+{% extends "en/base.html" %}
+{% block menu %}{{ menu('ca') }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="span12">
+        <h2>Download</h2>
+        <p><em>To verify with certainty the identity of the services offered by Freepto , you must download and install our CA on your computer.</em></p>
+        <p><code>wget http://ca.freepto.mx/ca.pem</code></p>
+
+        <h2>Verify</h2>
+        <p>It's strongly recommended to verify the authenticity of the certificate downloaded . You can do it in a few simple steps:</p>
+        <ul>
+            <li><strong>Download our GPG key:</strong></li>
+            <p><code>gpg --search-key 364B68D4</code></p>
+
+            <li><strong>Check the key fingerprint:</strong></li>
+            <p><em>This step is necessary to ensure that the gpg key downloaded is really our</em></p>
+                <p>Check that the fingerprint shown by the following command,</p>
+                <p><code>gpg --fingerprint 364B68D4</code></p>
+                <p>is equal to that shown below:</p>
+                <p><code>Key fingerprint = C355 97C8 7BE0 8D11 A5D8  4087 909C 6C75 364B 68D4</code></p>
+
+            <li><strong>Check the certificate:</strong></li>
+                <p>Download the signature of the certificate:</p>
+                <p><code>wget http://ca.freepto.mx/ca.pem.sig</code></p>
+                <p>At this point verify the certificate using gpg:</p>
+                <p><code>$ gpg --verify ca.pem.sig ca.pem<br />
+                   gpg: Signature made Mon 03 Nov 2014 23:45:25 GMT using RSA key ID 364B68D4<br />
+                   gpg: Good signature from "Freepto Repository <deb@freepto.mx>"</code></p>
+        </ul>
+
+        <h2>Instal</h2>
+        <p>To install the certificate on your computer, follow these steps:</p>
+        <p><code>$ sudo -s<br />
+        # apt-get install ca-certificates<br />
+        # wget -O /usr/local/share/ca-certificates/freepto.pem http://ca.freepto.mx/ca.pem<br />
+        # update-ca-certificates</code></p>
+    </div>
+</div>
+{% endblock %}
